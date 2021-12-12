@@ -11,6 +11,8 @@ from nltk.stem import PorterStemmer
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
+from bs4 import BeautifulSoup
+
 EXAMPLE_FILE = 'Data/SpamData/01_Processing/practice_email.txt'
 
 SPAM_1_PATH = 'Data/SpamData/01_Processing/spam_assassin_corpus/spam_1'
@@ -24,6 +26,7 @@ VOCAB_SIZE = 2500
 
 # DATA_JSON_FILE = 'Data/SpamData/01_Processing/email-text-data2.json'
 DATA_JSON_FILE = 'Data/email-text-data.json'
+DATA_JSON_NO_HTML_FILE = 'Data/email-text-data-no-html.json'
 WORD_ID_FILE = 'Data/SpamData/01_Processing/word-by-id.csv'
 
 TRAINING_DATA_FILE = 'Data/SpamData/02_Training/train-data.txt'
@@ -51,6 +54,9 @@ def email_body_generator(path):
             stream.close()
 
             email_body = '\n'.join(lines)
+            # Remove html
+            soup = BeautifulSoup(email_body, 'html.parser')
+            email_body = soup.get_text()
             yield filename, email_body
 
 
@@ -83,5 +89,6 @@ data['FILE_NAME'] = data.index
 data.set_index('DOC_ID', inplace=True)
 
 # SAVE TO JSON
-data.to_json(DATA_JSON_FILE)
+# data.to_json(DATA_JSON_FILE)
+data.to_json(DATA_JSON_NO_HTML_FILE)
 print('Pre-Processing completed!')
