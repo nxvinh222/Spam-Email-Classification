@@ -1,13 +1,13 @@
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import recall_score, precision_score, f1_score
+from sklearn.metrics import recall_score, precision_score, f1_score, accuracy_score
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
 import joblib
 
 # Prepare data
-DATA_JSON_FILE = 'Data/SpamData/01_Processing/email-text-data.json'
+DATA_JSON_FILE = 'Data/email-text-data-no-html.json'
 data = pd.read_json(DATA_JSON_FILE)
 data.sort_index(inplace=True)
 
@@ -21,6 +21,7 @@ classifier = MultinomialNB()
 classifier.fit(X_train, y_train)
 
 # Evaluate model
+print(accuracy_score(y_test, classifier.predict(X_test)))
 print(recall_score(y_test, classifier.predict(X_test)))
 print(precision_score(y_test, classifier.predict(X_test)))
 print(f1_score(y_test, classifier.predict(X_test)))
